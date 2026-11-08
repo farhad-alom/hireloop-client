@@ -18,6 +18,16 @@ export const auth = betterAuth({
 
   emailAndPassword: { enabled: true },
 
+
+  user: {
+    additionalFields: {
+      role: {
+        type: ['seeker', 'rectuiter', 'admin'],
+        input: false
+      }
+    }
+  },
+
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID!.trim(),

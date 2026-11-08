@@ -16,7 +16,7 @@ const tabClass = (active: boolean) =>
 export function AuthForm({ initialSignIn }: { initialSignIn: boolean }) {
     const showSignIn = initialSignIn
     const router = useRouter()
-    // const [showSignIn, setShowSignIn] = useState(initialSignIn)
+
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
 
@@ -33,7 +33,7 @@ export function AuthForm({ initialSignIn }: { initialSignIn: boolean }) {
 
         setLoading(true)
 
-        const { error } = showSignIn
+        const { data: result, error } = showSignIn
             ? await authClient.signIn.email({ email: data.email, password: data.password })
             : await authClient.signUp.email({
                 name: data.name,
@@ -48,9 +48,14 @@ export function AuthForm({ initialSignIn }: { initialSignIn: boolean }) {
             return
         }
 
+        console.log("data from the signin", data, "redirect and tokens: ", result)
+
         router.push("/")
         router.refresh()
     }
+
+
+
 
     return (
         <main className="flex items-start justify-center bg-[#0a0a0a] px-4 py-10 text-white">
