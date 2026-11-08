@@ -8,6 +8,19 @@ import { authClient } from "@/lib/auth-client"
 const inputClass =
     "w-full rounded-xl border border-white/10 bg-[#0d0d0d] px-4 py-2.5 text-sm text-white outline-none transition-colors placeholder:text-white/30 focus:border-[#6D5CE8]"
 
+const roleClass = (active: boolean) =>
+    active
+        ? "grow rounded-xl border border-[#6D5CE8] bg-[#6D5CE8]/20 px-3 py-2.5 text-center text-sm font-medium text-white transition-colors"
+        : "grow rounded-xl border border-white/10 bg-[#0d0d0d] px-3 py-2.5 text-center text-sm text-white/60 transition-colors hover:border-white/25 hover:text-white"
+
+const ROLES = [
+    { value: "seeker", label: "Job Seeker" },
+    { value: "recruiter", label: "Recruiter" },
+    { value: "admin", label: "Admin" },
+] as const
+
+type Role = (typeof ROLES)[number]["value"]
+
 const tabClass = (active: boolean) =>
     active
         ? "rounded-full bg-[#6D5CE8] py-2 transition-colors"
@@ -19,6 +32,7 @@ export function AuthForm({ initialSignIn }: { initialSignIn: boolean }) {
 
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
+    const [role, setRole] = useState<Role>("seeker")
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -39,6 +53,7 @@ export function AuthForm({ initialSignIn }: { initialSignIn: boolean }) {
                 name: data.name,
                 email: data.email,
                 password: data.password,
+                role,
             })
 
         setLoading(false)
@@ -81,6 +96,25 @@ export function AuthForm({ initialSignIn }: { initialSignIn: boolean }) {
                         <div>
                             <label htmlFor="name" className="mb-1.5 block text-sm text-white/70">Full Name</label>
                             <input id="name" name="name" type="text" placeholder="Your name" required className={inputClass} />
+                        </div>
+                    )}
+
+                    {!showSignIn && (
+                        <div>
+                            <label className="mb-1.5 block text-sm text-white/70">I am a</label>
+                            <div className="flex gap-2">
+                                {ROLES.map((r) => (
+                                    <button
+                                        key={r.value}
+                                        type="button"
+                                        onClick={() => setRole(r.value)}
+                                        className={roleClass(role === r.value)}
+                                        aria-pressed={role === r.value}
+                                    >
+                                        {r.label}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     )}
 

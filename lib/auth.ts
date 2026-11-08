@@ -1,5 +1,6 @@
 import { mongodbAdapter } from "@better-auth/mongo-adapter"
 import { betterAuth } from "better-auth"
+import { createAuthMiddleware, APIError } from "better-auth/api"
 import { MongoClient } from "mongodb"
 
 const uri = process.env.MONGODB_URI?.trim()
@@ -22,10 +23,23 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       role: {
-        type: ['seeker', 'rectuiter', 'admin'],
-        input: false
+        type: ['seeker', 'recruiter', 'admin'],
+        input: true,
+        defaultValue: 'seeker',
+        required: false,
       }
     }
+  },
+
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      if (ctx.path === "/sign-up/email") {
+        const role = ctx.body?.role as string | undefined;
+        if (!role || !["seeker", "recruiter", "admin"].includes(role)) {
+          throw new APIError("BAD_REQUEST", { message: "Invalid role" });
+        }
+      }
+    }),
   },
 
   socialProviders: {
@@ -35,3 +49,5 @@ export const auth = betterAuth({
     },
   },
 })
+
+
