@@ -58,7 +58,7 @@ function ActionLinks({
         Sign In
       </Link>
       <Link
-        href="/get-started"
+        href="/sign-up"
         onClick={onNavigate}
         className="inline-flex items-center justify-center rounded-lg bg-[#5B4BF5] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4a3be0]"
       >
