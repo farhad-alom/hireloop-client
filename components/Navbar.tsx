@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { signOut, useSession } from "@/lib/auth-client"
+import { ThemeToggle } from "@/components/ThemeToggle"
 
 const navLinks = [
   { label: "Browse Jobs", href: "/browse-jobs" },
@@ -119,7 +120,7 @@ export function Navbar() {
       <div className="mx-auto max-w-7xl">
         <div className="flex items-center justify-between rounded-xl border border-white/5 bg-[#232323] px-4 py-3 md:px-5">
           <Logo />
-
+          <ThemeToggle />
           {/* Desktop */}
           <ActionLinks
             className="hidden md:flex"

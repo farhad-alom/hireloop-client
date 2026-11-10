@@ -37,11 +37,11 @@ const socials = [
 
 export function Footer() {
     return (
-        <footer className="relative overflow-hidden bg-[#111] text-sm text-white/50">
+        <footer className="relative overflow-hidden bg-card text-sm text-muted-foreground">
             {/* Top grid pattern (fade out) */}
             <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[linear-gradient(to_right,#ffffff0d_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0d_1px,transparent_1px)] bg-size-[48px_24px] mask-[linear-gradient(to_bottom,black,transparent)]"
+                className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[48px_24px] mask-[linear-gradient(to_bottom,black,transparent)]"
             />
 
             <div className="relative mx-auto max-w-7xl px-6 pb-8 pt-16 md:px-8">
@@ -66,13 +66,13 @@ export function Footer() {
                     <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 md:gap-16">
                         {columns.map((col) => (
                             <div key={col.title}>
-                                <h4 className="font-medium text-[#5B4BF5]">{col.title}</h4>
+                                <h4 className="font-medium text-brand">{col.title}</h4>
                                 <ul className="mt-5 space-y-3">
                                     {col.links.map((link) => (
                                         <li key={link.label}>
                                             <Link
                                                 href={link.href}
-                                                className="transition-colors hover:text-white"
+                                                className="transition-colors hover:text-foreground"
                                             >
                                                 {link.label}
                                             </Link>
@@ -92,7 +92,7 @@ export function Footer() {
                                 key={label}
                                 href={href}
                                 aria-label={label}
-                                className="flex size-11 items-center justify-center rounded-lg bg-white/5 text-white/60 transition-colors hover:bg-[#5B4BF5] hover:text-white"
+                                className="flex size-11 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors hover:bg-brand hover:text-brand-foreground"
                             >
                                 <Icon className="size-4" />
                             </Link>
@@ -101,7 +101,7 @@ export function Footer() {
 
                     <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
                         <span>Copyright 2024 —Programming Hero</span>
-                        <span className="text-white/70">
+                        <span className="text-muted-foreground/80">
                             Terms &amp; Policy - Privacy Guideline
                         </span>
                     </div>

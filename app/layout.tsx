@@ -1,13 +1,15 @@
+
 import { Geist, Geist_Mono } from "next/font/google"
 import { Navbar } from "@/components/Navbar"
-
-
+import { Footer } from "@/components/Footer"
+import { ThemeProvider } from "@/components/theme-provider"
+import { cn } from "@/lib/utils"
 import "./globals.css"
-// import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@/lib/utils";
-import { Footer } from "@/components/Footer";
 
-const geist = Geist({ subsets: ['latin'], variable: '--font-sans' })
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -16,9 +18,8 @@ const fontMono = Geist_Mono({
 
 export const metadata = {
   title: "HireLoop Client",
-  description: "Peer-to-Peer Creative Studio Sharing Platform",
-};
-
+  description: "AI-native career platform",
+}
 
 export default function RootLayout({
   children,
@@ -27,21 +28,21 @@ export default function RootLayout({
 }>) {
   return (
     <html
-
-
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", geist.variable)}
+      className={cn(
+        "antialiased",
+        fontMono.variable,
+        "font-sans",
+        geist.variable
+      )}
     >
       <body>
-        {/* <ThemeProvider> */}
-        <Navbar />
-        {children}
-
-        <Footer />
-
-
-        {/* </ThemeProvider> */}
+        <ThemeProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   )

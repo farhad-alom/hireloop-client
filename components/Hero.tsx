@@ -27,13 +27,13 @@ const stats: { icon: LucideIcon; value: string; label: string }[] = [
 function Badge() {
   return (
     <div className="flex items-center justify-center gap-3">
-      <span className="h-px w-12 bg-gradient-to-r from-transparent to-white/20 sm:w-20" />
-      <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#141414] px-4 py-2 text-xs shadow-lg">
+      <span className="h-px w-12 bg-gradient-to-r from-transparent to-border sm:w-20" />
+      <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs shadow-lg">
         <Briefcase className="size-4 text-orange-400" aria-hidden="true" />
-        <span className="font-mono font-bold text-white">50,000+</span>
-        <span className="font-mono uppercase text-white/50">new jobs this month</span>
+        <span className="font-mono font-bold">50,000+</span>
+        <span className="font-mono uppercase text-muted-foreground">new jobs this month</span>
       </div>
-      <span className="h-px w-12 bg-gradient-to-l from-transparent to-white/20 sm:w-20" />
+      <span className="h-px w-12 bg-gradient-to-l from-transparent to-border sm:w-20" />
     </div>
   )
 }
@@ -42,34 +42,34 @@ function SearchBar() {
   return (
     <form
       action="/browse-jobs"
-      className="mx-auto flex w-full max-w-xl flex-col gap-1 rounded-xl border border-white/10 bg-[#111] p-2 sm:h-[46px] sm:flex-row sm:items-center sm:gap-0 sm:p-0 sm:pl-1 sm:pr-2"
+      className="mx-auto flex w-full max-w-xl flex-col gap-1 rounded-xl border border-border bg-card p-2 sm:h-[46px] sm:flex-row sm:items-center sm:gap-0 sm:p-0 sm:pl-1 sm:pr-2"
     >
       <label className="flex flex-1 items-center gap-2 px-3 py-2">
-        <Search className="size-4 shrink-0 text-white/80" aria-hidden="true" />
+        <Search className="size-4 shrink-0 text-foreground/80" aria-hidden="true" />
         <input
           name="q"
           type="text"
           placeholder="Job title, skill or company"
-          className="w-full bg-transparent text-xs text-white placeholder:text-white/50 focus:outline-none"
+          className="w-full bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none"
         />
       </label>
 
-      <span aria-hidden="true" className="hidden h-5 w-px bg-white/10 sm:block" />
+      <span aria-hidden="true" className="hidden h-5 w-px bg-border sm:block" />
 
       <label className="flex flex-1 items-center gap-2 px-3 py-2">
-        <MapPin className="size-4 shrink-0 text-white/80" aria-hidden="true" />
+        <MapPin className="size-4 shrink-0 text-foreground/80" aria-hidden="true" />
         <input
           name="location"
           type="text"
           placeholder="Location or Remote"
-          className="w-full bg-transparent text-xs text-white placeholder:text-white/50 focus:outline-none"
+          className="w-full bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none"
         />
       </label>
 
       <button
         type="submit"
         aria-label="Search jobs"
-        className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-[#5B4BF5] text-white transition-colors hover:bg-[#4a3be0] sm:w-9"
+        className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-brand text-brand-foreground transition-colors hover:bg-brand-hover sm:w-9"
       >
         <Search className="size-4" />
       </button>
@@ -80,12 +80,12 @@ function SearchBar() {
 function TrendingRow() {
   return (
     <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
-      <span className="text-white/60">Trending Position</span>
+      <span className="text-muted-foreground">Trending Position</span>
       {trendingPositions.map((item) => (
         <Link
           key={item}
           href={`/browse-jobs?q=${encodeURIComponent(item)}`}
-          className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] text-white/85 transition-colors hover:bg-white/10"
+          className="rounded-full border border-border bg-muted px-3 py-1.5 text-[11px] text-foreground transition-colors hover:bg-accent"
         >
           {item}
         </Link>
@@ -103,11 +103,11 @@ function StatCard({
     label: string
   }) {
   return (
-    <div className="flex min-h-40 flex-col justify-between rounded-xl border border-white/10 bg-gradient-to-b from-black to-[#1a1a1a] p-5 md:min-h-44">
-      <Icon className="size-4 text-white" aria-hidden="true" />
+    <div className="flex min-h-40 flex-col justify-between rounded-xl border border-border bg-gradient-to-b from-card to-background p-5 md:min-h-44">
+      <Icon className="size-4 text-foreground" aria-hidden="true" />
       <div>
-        <p className="text-4xl font-medium text-white md:text-[42px]">{value}</p>
-        <p className="mt-1 text-xs text-white/85">{label}</p>
+        <p className="text-4xl font-medium text-foreground md:text-[42px]">{value}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{label}</p>
       </div>
     </div>
   )
@@ -117,7 +117,7 @@ function StatCard({
 
 export function Hero() {
   return (
-    <section className="relative isolate overflow-hidden bg-[linear-gradient(to_bottom,#1a1a1a_0px,#000_320px)] bg-black">
+    <section className="relative isolate overflow-hidden bg-[linear-gradient(to_bottom,var(--card)_0px,var(--background)_320px)] bg-background">
       {/* Globe: width is set once in --gw, bottom offset is calculated from it */}
       <div
         aria-hidden="true"
@@ -144,11 +144,11 @@ export function Hero() {
         <div className="flex flex-col items-center text-center">
           <Badge />
 
-          <h1 className="mt-7 text-4xl font-bold tracking-tight text-white lg:text-5xl">
+          <h1 className="mt-7 text-4xl font-bold tracking-tight text-foreground lg:text-5xl">
             Find Your Dream Job Today
           </h1>
 
-          <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/60 md:text-base">
+          <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
             HireLoop connects top talent with world-class companies. Browse thousands
             of curated opportunities and land your next role — faster.
           </p>
@@ -162,9 +162,9 @@ export function Hero() {
           </div>
 
           {/* Space where the globe's top glow shows */}
-          <p className="mt-44 max-w-md text-2xl font-light leading-snug text-white/55 md:mt-60 md:max-w-lg md:text-[28px]">
+          <p className="mt-44 max-w-md text-2xl font-light leading-snug text-muted-foreground md:mt-60 md:max-w-lg md:text-[28px]">
             Assisting over{" "}
-            <span className="font-normal text-white">15,000 job seekers</span> find
+            <span className="font-normal text-foreground">15,000 job seekers</span> find
             their dream positions.
           </p>
         </div>
