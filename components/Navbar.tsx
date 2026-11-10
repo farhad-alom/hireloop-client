@@ -3,8 +3,10 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { signOut, useSession } from "@/lib/auth-client"
 
 const navLinks = [
   { label: "Browse Jobs", href: "/browse-jobs" },
@@ -30,9 +32,15 @@ function Logo() {
 function ActionLinks({
   className,
   onNavigate,
+  user,
+  isPending,
+  onSignOut,
 }: {
   className?: string
   onNavigate?: () => void
+  user?: { name?: string | null } | null
+  isPending?: boolean
+  onSignOut?: () => void
 }) {
   return (
     <div className={cn("items-center gap-6", className)}>
@@ -50,26 +58,61 @@ function ActionLinks({
       {/* Divider (hidden on mobile) */}
       <span aria-hidden="true" className="hidden h-5 w-px bg-white/20 md:block" />
 
-      <Link
-        href="/sign-in"
-        onClick={onNavigate}
-        className="text-sm font-medium text-[#7C6BF7] transition-colors hover:text-[#9689fb]"
-      >
-        Sign In
-      </Link>
-      <Link
-        href="/sign-up"
-        onClick={onNavigate}
-        className="inline-flex items-center justify-center rounded-lg bg-[#5B4BF5] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4a3be0]"
-      >
-        Get Started
-      </Link>
+      {isPending ? (
+        <div className="h-5 w-28" />
+      ) : user ? (
+        <div className="flex items-center gap-4">
+          <span className="text-sm font-medium text-white">
+            Welcome, <span className="text-[#7C6BF7]">{user.name}</span>
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              onNavigate?.()
+              onSignOut?.()
+            }}
+            className="text-sm font-medium text-white/70 transition-colors hover:text-white"
+          >
+            Sign Out
+          </button>
+        </div>
+      ) : (
+        <>
+          <Link
+            href="/sign-in"
+            onClick={onNavigate}
+            className="text-sm font-medium text-[#7C6BF7] transition-colors hover:text-[#9689fb]"
+          >
+            Sign In
+          </Link>
+          <Link
+            href="/sign-up"
+            onClick={onNavigate}
+            className="inline-flex items-center justify-center rounded-lg bg-[#5B4BF5] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4a3be0]"
+          >
+            Get Started
+          </Link>
+        </>
+      )}
     </div>
   )
 }
 
 export function Navbar() {
   const [open, setOpen] = useState(false)
+  const { data: session, isPending } = useSession()
+  const router = useRouter()
+
+  const handleSignOut = async () => {
+    await signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/")
+          router.refresh()
+        },
+      },
+    })
+  }
 
   return (
     <header className="bg-[#1a1a1a] p-3 md:p-3">
@@ -78,7 +121,12 @@ export function Navbar() {
           <Logo />
 
           {/* Desktop */}
-          <ActionLinks className="hidden md:flex" />
+          <ActionLinks
+            className="hidden md:flex"
+            user={session?.user}
+            isPending={isPending}
+            onSignOut={handleSignOut}
+          />
 
           {/* Mobile toggle */}
           <button
@@ -101,7 +149,10 @@ export function Navbar() {
           >
             <ActionLinks
               onNavigate={() => setOpen(false)}
-              className="flex flex-col items-end gap-4 text-right [&>span]:hidden"
+              user={session?.user}
+              isPending={isPending}
+              onSignOut={handleSignOut}
+              className="flex flex-col items-end gap-4 text-right [&>span[aria-hidden]]:hidden"
             />
           </div>
         )}
