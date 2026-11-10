@@ -26,11 +26,11 @@ export function ThemeToggle() {
             <button
                 type="button"
                 disabled
-                className="flex size-10 items-center justify-center rounded-lg border border-border"
+                className="flex size-8 items-center justify-center rounded-lg border border-border"
                 aria-label="Loading theme"
                 data-slot="theme-toggle-placeholder"
             >
-                <Sun className="size-5" />
+                <Sun className="size-4" />
             </button>
         )
     }
@@ -43,7 +43,7 @@ export function ThemeToggle() {
             onClick={() => setTheme(isDark ? "light" : "dark")}
             aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
             title={`Switch to ${isDark ? "light" : "dark"} mode`}
-            className="flex size-10 items-center justify-center rounded-lg border border-border bg-card text-foreground transition-colors hover:bg-accent"
+            className="flex size-8 items-center justify-center rounded-lg border border-border bg-card text-foreground transition-colors hover:bg-accent"
         >
             {isDark ? (
                 <Sun className="size-5" />

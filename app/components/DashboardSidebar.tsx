@@ -23,6 +23,7 @@ import {
     Users,
     type LucideIcon,
 } from "lucide-react"
+import Link from "next/link";
 
 type MenuItem = {
     id: string
@@ -42,7 +43,7 @@ const menuItemByRole: Record<"seeker" | "recruiter" | "admin", MenuItem[]> = {
     ],
     recruiter: [
         { id: "dashboard", name: "Dashboard", url: "/dashboard/recruiter", icon: LayoutGrid },
-        { id: "add-job", name: "Add Job", url: "/dashboard/recruiter/add-job", icon: CirclePlus },
+        { id: "add-job", name: "Add Job", url: "/dashboard/recruiter/jobs/new", icon: CirclePlus },
         { id: "manage-jobs", name: "Manage Jobs", url: "/dashboard/recruiter/manage-jobs", icon: Briefcase },
         { id: "applications", name: "Applications", url: "/dashboard/recruiter/applications", icon: FileText },
         { id: "settings", name: "Settings", url: "/dashboard/recruiter/settings", icon: Settings },
@@ -58,7 +59,7 @@ const menuItemByRole: Record<"seeker" | "recruiter" | "admin", MenuItem[]> = {
 }
 
 export function DashboardSidebar() {
-    const { data: session, isPending } = useSession();
+    const { data: session, } = useSession();
     const role = (session?.user?.role || 'seeker') as keyof typeof menuItemByRole;
 
 
@@ -75,7 +76,7 @@ export function DashboardSidebar() {
                         {
                             menuItemByRole[role].map((item) => (
                                 <SidebarMenuItem key={item.id}>
-                                    <SidebarMenuButton render={<a href={item.url} />}>
+                                    <SidebarMenuButton render={<Link href={item.url} />}>
                                         <item.icon />
                                         <span>{item.name}</span>
                                     </SidebarMenuButton>

@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from "react"
@@ -9,11 +10,10 @@ import { cn } from "@/lib/utils"
 import { signOut, useSession } from "@/lib/auth-client"
 import { ThemeToggle } from "@/components/ThemeToggle"
 
-const navLinks = [
-  { label: "Browse Jobs", href: "/browse-jobs" },
-  { label: "Company", href: "/company" },
-  { label: "Pricing", href: "/pricing" },
-]
+type Navlink = {
+  label: string
+  href: string
+}
 
 function Logo() {
   return (
@@ -31,17 +31,21 @@ function Logo() {
 }
 
 function ActionLinks({
+  navLinks,
   className,
   onNavigate,
   user,
   isPending,
   onSignOut,
+  showToggle,
 }: {
+  navLinks: Navlink[]
   className?: string
   onNavigate?: () => void
   user?: { name?: string | null } | null
   isPending?: boolean
   onSignOut?: () => void
+  showToggle?: boolean
 }) {
   return (
     <div className={cn("items-center gap-6", className)}>
@@ -56,16 +60,27 @@ function ActionLinks({
         </Link>
       ))}
 
-      {/* Divider (hidden on mobile) */}
-      <span aria-hidden="true" className="hidden h-5 w-px bg-white/20 md:block" />
+      {/* Divider */}
+      <span
+        aria-hidden="true"
+        className="hidden h-5 w-px bg-white/20 md:block"
+      />
 
+      {/* Theme Toggle */}
+      {showToggle && <ThemeToggle />}
+
+      {/* Authentication */}
       {isPending ? (
         <div className="h-5 w-28" />
       ) : user ? (
         <div className="flex items-center gap-4">
           <span className="text-sm font-medium text-white">
-            Welcome, <span className="text-[#7C6BF7]">{user.name}</span>
+            Welcome,{" "}
+            <span className="text-[#7C6BF7]">
+              {user.name}
+            </span>
           </span>
+
           <button
             type="button"
             onClick={() => {
@@ -86,6 +101,7 @@ function ActionLinks({
           >
             Sign In
           </Link>
+
           <Link
             href="/sign-up"
             onClick={onNavigate}
@@ -101,13 +117,26 @@ function ActionLinks({
 
 export function Navbar() {
   const [open, setOpen] = useState(false)
+
   const { data: session, isPending } = useSession()
   const router = useRouter()
 
+  // Navigation Links
+  const navLinks: Navlink[] = [
+    { label: "Home", href: "/" },
+    { label: "Browse Jobs", href: "/browse-jobs" },
+    { label: "Company", href: "/company" },
+    { label: "Pricing", href: "/pricing" },
+    ...(session?.user ? [{ label: "Dashboard", href: `/dashboard/${session?.user?.role || "seeker"}`, },] : []),
+
+  ]
+
+  // Sign Out
   const handleSignOut = async () => {
     await signOut({
       fetchOptions: {
         onSuccess: () => {
+          setOpen(false)
           router.push("/")
           router.refresh()
         },
@@ -119,36 +148,48 @@ export function Navbar() {
     <header className="bg-[#1a1a1a] p-3 md:p-3">
       <div className="mx-auto max-w-7xl">
         <div className="flex items-center justify-between rounded-xl border border-white/5 bg-[#232323] px-4 py-3 md:px-5">
+
           <Logo />
-          <ThemeToggle />
-          {/* Desktop */}
+
+          {/* Desktop Navigation */}
           <ActionLinks
+            navLinks={navLinks}
             className="hidden md:flex"
             user={session?.user}
             isPending={isPending}
             onSignOut={handleSignOut}
+            showToggle
           />
 
-          {/* Mobile toggle */}
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            aria-label={open ? "Close menu" : "Open menu"}
-            className="inline-flex size-9 items-center justify-center rounded-lg text-white transition-colors hover:bg-white/10 md:hidden"
-          >
-            {open ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
+          {/* Mobile Controls */}
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+
+            <button
+              type="button"
+              onClick={() => setOpen((prev) => !prev)}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              aria-label={open ? "Close menu" : "Open menu"}
+              className="inline-flex size-9 items-center justify-center rounded-lg text-white transition-colors hover:bg-white/10"
+            >
+              {open ? (
+                <X className="size-5" />
+              ) : (
+                <Menu className="size-5" />
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* Mobile menu */}
+        {/* Mobile Navigation */}
         {open && (
           <div
             id="mobile-menu"
             className="mt-2 rounded-xl border border-white/5 bg-[#232323] p-4 md:hidden"
           >
             <ActionLinks
+              navLinks={navLinks}
               onNavigate={() => setOpen(false)}
               user={session?.user}
               isPending={isPending}
