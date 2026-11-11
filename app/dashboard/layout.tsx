@@ -5,7 +5,7 @@ const DahsboardLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <SidebarProvider>
             <DashboardSidebar />
-            <main>
+            <main className="min-h-screen min-w-0 flex-1">
                 <SidebarTrigger />
                 {children}
             </main>
