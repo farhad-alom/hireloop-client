@@ -14,6 +14,7 @@ import { RadioGroup } from "@/components/ui/radio-group"
 import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { createJob } from "@/lib/actions/jobs"
 
 const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship"] as const
 
@@ -42,10 +43,9 @@ function fieldClasses() {
 }
 
 export default function NewJobPage() {
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
 
-        // One flat `FormData` -> one plain object. No form library needed.
         const raw = Object.fromEntries(new FormData(event.currentTarget)) as Record<string, string>
 
         const job = {
@@ -66,6 +66,11 @@ export default function NewJobPage() {
         // TODO: POST `job` to the jobs API once the backend endpoint is ready
         console.log("New job:", job)
         event.currentTarget.reset()
+
+        const result = await createJob(job);
+        console.log('Server response', result);
+
+
     }
 
     return (
