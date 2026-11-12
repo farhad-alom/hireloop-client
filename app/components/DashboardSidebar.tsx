@@ -44,7 +44,7 @@ const menuItemByRole: Record<"seeker" | "recruiter" | "admin", MenuItem[]> = {
     recruiter: [
         { id: "dashboard", name: "Dashboard", url: "/dashboard/recruiter", icon: LayoutGrid },
         { id: "add-job", name: "Add Job", url: "/dashboard/recruiter/jobs/new", icon: CirclePlus },
-        { id: "manage-jobs", name: "Manage Jobs", url: "/dashboard/recruiter/manage-jobs", icon: Briefcase },
+        { id: "manage-jobs", name: "Manage Jobs", url: "/dashboard/recruiter/jobs", icon: Briefcase },
         { id: "applications", name: "Applications", url: "/dashboard/recruiter/applications", icon: FileText },
         { id: "settings", name: "Settings", url: "/dashboard/recruiter/settings", icon: Settings },
     ],

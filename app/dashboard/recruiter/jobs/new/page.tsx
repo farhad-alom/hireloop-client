@@ -14,7 +14,7 @@ import { RadioGroup } from "@/components/ui/radio-group"
 import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-import { createJob } from "@/lib/actions/jobs"
+import { createJob, type JobData } from "@/lib/actions/jobs"
 
 const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship"] as const
 
@@ -48,7 +48,7 @@ export default function NewJobPage() {
 
         const raw = Object.fromEntries(new FormData(event.currentTarget)) as Record<string, string>
 
-        const job = {
+        const job: JobData = {
             title: raw.title,
             companyName: raw.companyName,
             jobCategory: raw.jobCategory,
