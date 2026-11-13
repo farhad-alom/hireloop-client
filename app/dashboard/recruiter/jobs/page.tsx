@@ -1,6 +1,6 @@
 import { getJobs } from "@/lib/api/jobs";
 
-import { JobsTable } from "./jobs-table";
+import { JobsTable } from "@/components/jobs/JobsTable";
 
 export default async function RecruiterJobPage() {
     const jobs = await getJobs().catch(() => null);

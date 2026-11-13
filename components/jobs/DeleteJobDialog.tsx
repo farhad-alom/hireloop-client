@@ -20,7 +20,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
-import { deleteJob } from "@/lib/actions/jobs";
+import { deleteJob } from "@/lib/api/jobs";
 
 interface DeleteJobDialogProps {
     jobId: string;
@@ -32,38 +32,32 @@ export function DeleteJobDialog({ jobId, jobTitle }: DeleteJobDialogProps) {
     const [deleting, setDeleting] = useState(false);
     const router = useRouter();
 
+
+
+
+
+
+
+    // handle function
     function handleDelete() {
         setDeleting(true);
-        console.log("Deleting job:", { jobId, jobTitle });
 
-        deleteJob(jobId)
-            .then((result) => {
-                if (result.deletedCount === 1) {
-                    toast.add({
-                        title: "Job deleted",
-                        description: `${jobTitle} has been removed successfully.`,
-                        type: "success",
-                    });
+        deleteJob(jobId).then(() => {
+            toast.add({
+                title: "Job deleted",
+                description: `${jobTitle} has been deleted successfully.`,
+                type: "success",
+            });
 
-                    setOpen(false);
-                    router.refresh();
-                } else {
-                    toast.add({
-                        title: "Delete failed",
-                        description: result.error || "The job could not be deleted.",
-                        type: "error",
-                    });
-                }
-            })
-            .catch(() => {
-                toast.add({
-                    title: "Delete failed",
-                    description: "Something went wrong while deleting the job.",
-                    type: "error",
-                });
-            })
-            .finally(() => setDeleting(false));
+            router.refresh();
+        });
     }
+
+
+
+
+
+
 
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>

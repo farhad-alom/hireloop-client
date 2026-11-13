@@ -24,6 +24,7 @@ import {
     type LucideIcon,
 } from "lucide-react"
 import Link from "next/link";
+import type { Role } from "@/types/user";
 
 type MenuItem = {
     id: string
@@ -32,7 +33,7 @@ type MenuItem = {
     icon: LucideIcon
 }
 
-const menuItemByRole: Record<"seeker" | "recruiter" | "admin", MenuItem[]> = {
+const menuItemByRole: Record<Role, MenuItem[]> = {
     seeker: [
         { id: "dashboard", name: "Dashboard", url: "/dashboard/seeker", icon: LayoutGrid },
         { id: "jobs", name: "Jobs", url: "/dashboard/seeker/jobs", icon: Briefcase },
@@ -60,16 +61,13 @@ const menuItemByRole: Record<"seeker" | "recruiter" | "admin", MenuItem[]> = {
 
 export function DashboardSidebar() {
     const { data: session, } = useSession();
-    const role = (session?.user?.role || 'seeker') as keyof typeof menuItemByRole;
+    const role = (session?.user?.role || 'seeker') as Role;
 
 
     return (
         <Sidebar>
             <SidebarHeader />
             <SidebarContent>
-                <SidebarGroup />
-                <SidebarGroup />
-
                 <SidebarGroup>
                     <SidebarMenu>
                         {/* menuItemByRole[role] হলো Dynamic Object Access */}

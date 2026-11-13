@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useState, type FormEvent } from "react"
 import { useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
+import type { Role } from "@/types/user"
 
 const inputClass =
     "w-full rounded-xl border border-input bg-muted/40 px-4 py-2.5 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-brand"
@@ -13,13 +14,11 @@ const roleClass = (active: boolean) =>
         ? "grow rounded-xl border border-brand bg-brand/20 px-3 py-2.5 text-center text-sm font-medium text-foreground transition-colors"
         : "grow rounded-xl border border-input bg-muted/40 px-3 py-2.5 text-center text-sm text-muted-foreground transition-colors hover:border-ring hover:text-foreground"
 
-const ROLES = [
+const ROLES: { value: Role; label: string }[] = [
     { value: "seeker", label: "Job Seeker" },
     { value: "recruiter", label: "Recruiter" },
     { value: "admin", label: "Admin" },
-] as const
-
-type Role = (typeof ROLES)[number]["value"]
+]
 
 const tabClass = (active: boolean) =>
     active
@@ -47,7 +46,7 @@ export function AuthForm({ initialSignIn }: { initialSignIn: boolean }) {
 
         setLoading(true)
 
-        const { data: result, error } = showSignIn
+        const { error } = showSignIn
             ? await authClient.signIn.email({ email: data.email, password: data.password })
             : await authClient.signUp.email({
                 name: data.name,
@@ -62,8 +61,6 @@ export function AuthForm({ initialSignIn }: { initialSignIn: boolean }) {
             setError(error.message ?? "Something went wrong")
             return
         }
-
-        console.log("data from the signin", data, "redirect and tokens: ", result)
 
         router.push("/")
         router.refresh()

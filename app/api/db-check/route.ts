@@ -10,20 +10,19 @@ export async function GET() {
 
   const client = new MongoClient(uri, { serverSelectionTimeoutMS: 8000 })
 
-  try {
-    await client.connect()
-    const result = await client
-      .db("hireloop-db")
-      .collection("connection_test")
-      .insertOne({ createdAt: new Date() })
-
-    return Response.json({ ok: true, insertedId: String(result.insertedId) })
-  } catch (e) {
-    return Response.json(
-      { ok: false, error: e instanceof Error ? e.message : String(e) },
-      { status: 500 }
+  return client
+    .connect()
+    .then(() =>
+      client
+        .db("hireloop-db")
+        .collection("connection_test")
+        .insertOne({ createdAt: new Date() })
     )
-  } finally {
-    await client.close()
-  }
+    .then((result) =>
+      Response.json({ ok: true, insertedId: String(result.insertedId) })
+    )
+    .catch((error) =>
+      Response.json({ ok: false, error: String(error) }, { status: 500 })
+    )
+    .finally(() => client.close())
 }

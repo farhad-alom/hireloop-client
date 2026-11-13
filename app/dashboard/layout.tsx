@@ -1,5 +1,5 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { DashboardSidebar } from "../components/DashboardSidebar";
+import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { Toaster } from "@/components/ui/toast";
 
 const DahsboardLayout = ({ children }: { children: React.ReactNode }) => {
