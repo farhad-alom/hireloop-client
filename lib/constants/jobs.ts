@@ -22,13 +22,6 @@ export const JOB_TYPES: SelectOption[] = [
     { value: "internship", label: "Internship" },
 ];
 
-export const SALARY_FREQUENCIES: SelectOption[] = [
-    { value: "per hour", label: "per hour" },
-    { value: "per day", label: "per day" },
-    { value: "per month", label: "per month" },
-    { value: "per year", label: "per year" },
-];
-
 // Finds the label of a category value, e.g. "engineering" -> "Engineering".
 // Returns "Other" when the value is unknown.
 export const getJobCategoryLabel = (value: string) =>

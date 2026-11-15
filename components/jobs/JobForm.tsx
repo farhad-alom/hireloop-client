@@ -17,10 +17,7 @@ import { toast } from "@/components/ui/toast"
 import { JobFormSection } from "@/components/jobs/JobFormSection"
 import { JobTypeSelector } from "@/components/jobs/JobTypeSelector"
 import { createJob, updateJob } from "@/lib/api/jobs"
-import {
-    JOB_CATEGORIES,
-    SALARY_FREQUENCIES,
-} from "@/lib/constants/jobs"
+import { JOB_CATEGORIES } from "@/lib/constants/jobs"
 import type { JobData } from "@/types/job"
 
 function fieldClasses() {
@@ -51,7 +48,6 @@ export function JobForm({ job }: { job?: JobData }) {
             deadline: raw.deadline ?? "",
             minSalary: Number(raw.minSalary ?? 0),
             maxSalary: Number(raw.maxSalary ?? 0),
-            salaryFrequency: raw.salaryFrequency,
             responsibilities: raw.responsibilities,
             qualifications: raw.qualifications,
         }
@@ -225,7 +221,7 @@ export function JobForm({ job }: { job?: JobData }) {
                         </Field>
                     </div>
 
-                    <div className="grid gap-5 md:grid-cols-3 md:gap-6">
+                    <div className="grid gap-5 md:grid-cols-2 md:gap-6">
                         <Field>
                             <FieldLabel>Min Salary / Rate</FieldLabel>
                             <Input
@@ -250,21 +246,6 @@ export function JobForm({ job }: { job?: JobData }) {
                                 placeholder="40"
                                 className={fieldClasses()}
                             />
-                        </Field>
-
-                        <Field>
-                            <FieldLabel>Frequency</FieldLabel>
-                            <NativeSelect
-                                name="salaryFrequency"
-                                defaultValue={job?.salaryFrequency ?? "per hour"}
-                                className={`w-full ${fieldClasses()}`}
-                            >
-                                {SALARY_FREQUENCIES.map((frequency) => (
-                                    <NativeSelectOption key={frequency.value} value={frequency.value}>
-                                        {frequency.label}
-                                    </NativeSelectOption>
-                                ))}
-                            </NativeSelect>
                         </Field>
                     </div>
                 </JobFormSection>

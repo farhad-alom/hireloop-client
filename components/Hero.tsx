@@ -47,7 +47,7 @@ function SearchBar() {
       <label className="flex flex-1 items-center gap-2 px-3 py-2">
         <Search className="size-4 shrink-0 text-foreground/80" aria-hidden="true" />
         <input
-          name="q"
+          name="search"
           type="text"
           placeholder="Job title, skill or company"
           className="w-full bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none"
@@ -84,7 +84,7 @@ function TrendingRow() {
       {trendingPositions.map((item) => (
         <Link
           key={item}
-          href={`/browse-jobs?q=${encodeURIComponent(item)}`}
+          href={`/browse-jobs?search=${encodeURIComponent(item)}`}
           className="rounded-full border border-border bg-muted px-3 py-1.5 text-[11px] text-foreground transition-colors hover:bg-accent"
         >
           {item}

@@ -12,7 +12,8 @@ export interface JobData {
     deadline: string;
     minSalary: number;
     maxSalary: number;
-    salaryFrequency: string;
+    // Optional: the salary period is no longer collected in the job form.
+    salaryFrequency?: string;
     responsibilities: string;
     qualifications: string;
     status?: string;
