@@ -3,13 +3,19 @@ import type { JobData, JobMutationResult, JobRecord } from "@/types/job";
 const BASE_URL =
     process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:5000";
 
-export const getJobs = async (): Promise<JobRecord[]> => {
-    const res = await fetch(`${BASE_URL}/jobs`, {
+
+
+export const getJobs = async (query = ''): Promise<JobRecord[]> => {
+    const res = await fetch(`${BASE_URL}/jobs?${query}`, {
         cache: "no-store",
     });
+    http://localhost:5000/jobs?JobType=full-time&isRemote=true
 
     return res.json();
 };
+
+
+
 
 export const getJob = async (jobId: string): Promise<JobRecord | null> => {
     const res = await fetch(`${BASE_URL}/jobs/${jobId}`, {
@@ -56,3 +62,5 @@ export const deleteJob = async (jobId: string): Promise<JobMutationResult> => {
 
     return res.json();
 };
+
+// 

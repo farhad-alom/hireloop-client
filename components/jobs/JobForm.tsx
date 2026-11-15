@@ -160,11 +160,18 @@ export function JobForm({ job }: { job?: JobData }) {
                                 <NativeSelectOption value="" disabled>
                                     Select a category
                                 </NativeSelectOption>
+
                                 {JOB_CATEGORIES.map((category) => (
                                     <NativeSelectOption key={category.value} value={category.value}>
                                         {category.label}
                                     </NativeSelectOption>
                                 ))}
+
+
+
+
+
+
                             </NativeSelect>
                         </Field>
                     </div>
