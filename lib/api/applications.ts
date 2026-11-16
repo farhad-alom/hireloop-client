@@ -35,9 +35,13 @@ export const applyToJob = async (
 };
 
 // Loads the logged-in user's applications (with job details merged in).
-// A network error is returned as a normal result so the page can show
-// a friendly error message instead of crashing.
-export const getMyApplications = async (): Promise<{
+// - From client components: call it with no arguments; the browser sends
+//   its session cookie automatically (credentials: "include").
+// - From a Server Component (RSC): pass the request's cookie header, e.g.
+//   getMyApplications((await headers()).get("cookie") ?? "").
+export const getMyApplications = async (
+    cookie = ""
+): Promise<{
     ok: boolean;
     applications: ApplicationWithJob[];
     error?: string;
@@ -46,6 +50,7 @@ export const getMyApplications = async (): Promise<{
         const res = await fetch(`${BASE_URL}/applications/my`, {
             cache: "no-store",
             credentials: "include",
+            headers: cookie ? { cookie } : undefined,
         });
 
         // Not logged in (or the API is down) is treated as "no applications",
