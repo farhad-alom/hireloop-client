@@ -36,28 +36,7 @@ export const getJob = async (jobId: string): Promise<JobRecord | null> => {
     }
 };
 
-// Sends a job application for the logged-in user.
-// The Express API reads the better-auth session cookie to know who applies.
-export const applyToJob = async (
-    jobId: string
-): Promise<{ ok: boolean; error?: string }> => {
-    try {
-        const res = await fetch(`${BASE_URL}/jobs/${jobId}/apply`, {
-            method: "POST",
-            credentials: "include",
-        });
-
-        if (res.ok) {
-            return { ok: true };
-        }
-
-        // The API explains the problem (401 not logged in, 409 already applied...).
-        const data = await res.json().catch(() => null);
-        return { ok: false, error: data?.error ?? "Could not submit application" };
-    } catch {
-        return { ok: false, error: "Could not reach the server. Try again." };
-    }
-};
+// Sending a job application lives in lib/api/applications.ts now.
 
 export const createJob = async (jobData: JobData): Promise<JobMutationResult> => {
     const res = await fetch(`${BASE_URL}/jobs`, {

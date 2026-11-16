@@ -17,7 +17,7 @@ import {
 
 import type { JobRecord } from "@/types/job"
 import { useSession } from "@/lib/auth-client"
-import { applyToJob } from "@/lib/api/jobs"
+import { applyToJob } from "@/lib/api/applications"
 import {
     getJobCategoryLabel,
     getJobLocationLabel,
@@ -133,7 +133,9 @@ export function JobDetails({ job }: { job: JobRecord }) {
     // Starts the application flow:
     // 1. Wait for the session check (we don't know yet if the user is logged in).
     // 2. Not logged in → send them to sign in and come back to this job after.
-    // 3. Logged in → POST the application to the Express API.
+    // 3. Logged in but not a job seeker → show a message (recruiters/admins
+    //    cannot apply).
+    // 4. Logged-in job seeker → POST the application to the Express API.
     async function handleApply() {
         if (sessionLoading || applying || applied) return;
 
@@ -141,6 +143,11 @@ export function JobDetails({ job }: { job: JobRecord }) {
             // encodeURIComponent keeps the URL safe (it can contain ":" and "/").
             const backToJob = encodeURIComponent(`/browse-jobs/${job._id}`);
             router.push(`/sign-in?next=${backToJob}`);
+            return;
+        }
+
+        if (session.user.role !== "seeker") {
+            setApplyError("User is not a job seeker");
             return;
         }
 
