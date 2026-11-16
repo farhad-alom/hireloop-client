@@ -19,6 +19,8 @@ export interface JobData {
     status?: string;
     applicants?: number;
     postedAt?: string;
+    // Set by the API on create (MongoDB `createdAt`).
+    createdAt?: string;
 }
 
 // A job as it comes back from the API (always has an _id).

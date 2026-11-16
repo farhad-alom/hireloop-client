@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useState, type FormEvent } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
 import type { Role } from "@/types/user"
 
@@ -25,9 +25,31 @@ const tabClass = (active: boolean) =>
         ? "rounded-full bg-brand py-2 text-brand-foreground transition-colors"
         : "rounded-full py-2 text-muted-foreground transition-colors hover:text-foreground"
 
+// Decides where to send the user after signing in.
+// The `next` param may only point to a path inside this app
+// (it must start with "/" but not "//"). Anything else — like
+// "https://evil.com" — falls back to the home page.
+function getSafeRedirect(next: string | null): string {
+    if (next && next.startsWith("/") && !next.startsWith("//")) {
+        return next
+    }
+    return "/"
+}
+
 export function AuthForm({ initialSignIn }: { initialSignIn: boolean }) {
     const showSignIn = initialSignIn
     const router = useRouter()
+    const searchParams = useSearchParams()
+
+    // Where to go after signing in, e.g. back to a job page:
+    // /sign-in?next=/browse-jobs/665f1c... -> "/browse-jobs/665f1c..."
+    const redirectTo = getSafeRedirect(searchParams.get("next"))
+
+    // Keeps the redirect target when switching between Sign In and Sign Up.
+    const withNext = (path: string) =>
+        searchParams.get("next")
+            ? `${path}?next=${encodeURIComponent(searchParams.get("next") as string)}`
+            : path
 
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
@@ -62,7 +84,8 @@ export function AuthForm({ initialSignIn }: { initialSignIn: boolean }) {
             return
         }
 
-        router.push("/")
+        // Go back to where the user came from (the job page), or home.
+        router.push(redirectTo)
         router.refresh()
     }
 
@@ -74,8 +97,8 @@ export function AuthForm({ initialSignIn }: { initialSignIn: boolean }) {
             <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 md:p-8">
 
                 <div className="grid grid-cols-2 gap-1 rounded-full bg-muted p-1 text-center text-sm font-medium">
-                    <Link href="/sign-in" className={tabClass(showSignIn)}>Sign In</Link>
-                    <Link href="/sign-up" className={tabClass(!showSignIn)}>Sign Up</Link>
+                    <Link href={withNext("/sign-in")} className={tabClass(showSignIn)}>Sign In</Link>
+                    <Link href={withNext("/sign-up")} className={tabClass(!showSignIn)}>Sign Up</Link>
                 </div>
 
 
@@ -148,7 +171,7 @@ export function AuthForm({ initialSignIn }: { initialSignIn: boolean }) {
                 <p className="mt-5 text-center text-sm text-muted-foreground">
                     {showSignIn ? "Don't have an account? " : "Already have an account? "}
                     <Link
-                        href={showSignIn ? "/sign-up" : "/sign-in"}
+                        href={withNext(showSignIn ? "/sign-up" : "/sign-in")}
                         className="font-medium text-brand-muted transition-colors hover:text-brand-muted/75"
                     >
                         {showSignIn ? "Sign Up" : "Sign In"}

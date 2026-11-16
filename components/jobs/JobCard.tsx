@@ -5,8 +5,10 @@
 // and a bookmark button on the right.
 
 import { Bookmark, Clock, Wallet } from "lucide-react"
+import Link from "next/link"
 
-import type { JobData } from "@/types/job"
+import type { JobRecord } from "@/types/job"
+import { getJobLocationLabel } from "@/lib/constants/jobs"
 
 // 140000 -> "$140K", 800 -> "$800".
 const formatSalary = (value: number) =>
@@ -15,7 +17,7 @@ const formatSalary = (value: number) =>
         maximumFractionDigits: 0,
     }).format(value)}`;
 
-export function JobCard({ job }: { job: JobData }) {
+export function JobCard({ job }: { job: JobRecord }) {
     // TODO: implement — save the job for the current user.
     const handleBookmark = () => {};
 
@@ -27,10 +29,14 @@ export function JobCard({ job }: { job: JobData }) {
             </div>
 
             <div className="min-w-0 flex-1">
-                <h3 className="text-lg font-semibold">{job.title}</h3>
+                {/* The title links to the job details page so cards are clickable. */}
+                <Link href={`/browse-jobs/${job._id}`} className="group/title w-fit">
+                    <h3 className="text-lg font-semibold transition-colors group-hover/title:text-brand-muted">
+                        {job.title}
+                    </h3>
+                </Link>
                 <p className="mt-0.5 truncate text-sm text-muted-foreground">
-                    {job.companyName} • {job.location}
-                    {job.isRemote && " (Remote)"}
+                    {job.companyName} • {getJobLocationLabel(job)}
                 </p>
 
                 <div className="mt-3 flex flex-wrap gap-2">

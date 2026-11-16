@@ -9,20 +9,54 @@ export const getJobs = async (query = ''): Promise<JobRecord[]> => {
     const res = await fetch(`${BASE_URL}/jobs?${query}`, {
         cache: "no-store",
     });
-    http://localhost:5000/jobs?JobType=full-time&isRemote=true
 
     return res.json();
 };
 
-
-
-
 export const getJob = async (jobId: string): Promise<JobRecord | null> => {
-    const res = await fetch(`${BASE_URL}/jobs/${jobId}`, {
-        cache: "no-store",
-    });
+    // A missing or malformed id can never match a job — skip the request.
+    if (!jobId || !/^[0-9a-fA-F]{24}$/.test(jobId)) {
+        return null;
+    }
 
-    return res.json();
+    try {
+        const res = await fetch(`${BASE_URL}/jobs/${jobId}`, {
+            cache: "no-store",
+        });
+
+        // 404 means the job does not exist — not an error worth throwing.
+        if (!res.ok) {
+            return null;
+        }
+
+        return res.json();
+    } catch {
+        // API is down — the page shows its "job not available" message.
+        return null;
+    }
+};
+
+// Sends a job application for the logged-in user.
+// The Express API reads the better-auth session cookie to know who applies.
+export const applyToJob = async (
+    jobId: string
+): Promise<{ ok: boolean; error?: string }> => {
+    try {
+        const res = await fetch(`${BASE_URL}/jobs/${jobId}/apply`, {
+            method: "POST",
+            credentials: "include",
+        });
+
+        if (res.ok) {
+            return { ok: true };
+        }
+
+        // The API explains the problem (401 not logged in, 409 already applied...).
+        const data = await res.json().catch(() => null);
+        return { ok: false, error: data?.error ?? "Could not submit application" };
+    } catch {
+        return { ok: false, error: "Could not reach the server. Try again." };
+    }
 };
 
 export const createJob = async (jobData: JobData): Promise<JobMutationResult> => {
