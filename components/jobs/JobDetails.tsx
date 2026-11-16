@@ -17,7 +17,7 @@ import {
 
 import type { JobRecord } from "@/types/job"
 import { useSession } from "@/lib/auth-client"
-import { applyToJob } from "@/lib/api/applications"
+import { applyToJob, getApplicationCount } from "@/lib/api/applications"
 import {
     getJobCategoryLabel,
     getJobLocationLabel,
@@ -135,7 +135,9 @@ export function JobDetails({ job }: { job: JobRecord }) {
     // 2. Not logged in → send them to sign in and come back to this job after.
     // 3. Logged in but not a job seeker → show a message (recruiters/admins
     //    cannot apply).
-    // 4. Logged-in job seeker → POST the application to the Express API.
+    // 4. Free-plan check: users can apply to 5 jobs for free. When the limit
+    //    is reached, send them to /payment instead of applying.
+    // 5. Logged-in job seeker → POST the application to the Express API.
     async function handleApply() {
         if (sessionLoading || applying || applied) return;
 
@@ -154,12 +156,26 @@ export function JobDetails({ job }: { job: JobRecord }) {
         setApplying(true);
         setApplyError("");
 
+        // Ask the API how many applications this user already used.
+        // (The server enforces the same limit again on POST, so this
+        // check is just to send the user to /payment early.)
+        const countResult = await getApplicationCount();
+
+        if (countResult.ok && countResult.count >= countResult.limit) {
+            setApplying(false);
+            router.push("/payment");
+            return;
+        }
+
         const result = await applyToJob(job._id);
 
         setApplying(false);
 
         if (result.ok) {
             setApplied(true);
+        } else if (result.limitReached) {
+            // The server said the limit is reached — go to /payment.
+            router.push("/payment");
         } else {
             setApplyError(result.error ?? "Could not submit application");
         }
