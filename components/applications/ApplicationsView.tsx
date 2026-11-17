@@ -327,6 +327,10 @@ export function ApplicationsView({
                                     <Button
                                         size="sm"
                                         variant="ghost"
+                                        // Renders a Link, not a <button>,
+                                        // so Base UI needs nativeButton={false}
+                                        // (same pattern as JobsTable).
+                                        nativeButton={false}
                                         render={
                                             <Link
                                                 href={`/browse-jobs/${application.jobId}`}

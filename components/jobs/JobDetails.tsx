@@ -136,7 +136,7 @@ export function JobDetails({ job }: { job: JobRecord }) {
     // 3. Logged in but not a job seeker → show a message (recruiters/admins
     //    cannot apply).
     // 4. Free-plan check: users can apply to 5 jobs for free. When the limit
-    //    is reached, send them to /payment instead of applying.
+    //    is reached, send them to /checkout to pay for HireLoop Pro.
     // 5. Logged-in job seeker → POST the application to the Express API.
     async function handleApply() {
         if (sessionLoading || applying || applied) return;
@@ -158,12 +158,12 @@ export function JobDetails({ job }: { job: JobRecord }) {
 
         // Ask the API how many applications this user already used.
         // (The server enforces the same limit again on POST, so this
-        // check is just to send the user to /payment early.)
+        // check is just to send the user to /checkout early.)
         const countResult = await getApplicationCount();
 
         if (countResult.ok && countResult.count >= countResult.limit) {
             setApplying(false);
-            router.push("/payment");
+            router.push("/checkout");
             return;
         }
 
@@ -174,8 +174,8 @@ export function JobDetails({ job }: { job: JobRecord }) {
         if (result.ok) {
             setApplied(true);
         } else if (result.limitReached) {
-            // The server said the limit is reached — go to /payment.
-            router.push("/payment");
+            // The server said the limit is reached — go to /checkout.
+            router.push("/checkout");
         } else {
             setApplyError(result.error ?? "Could not submit application");
         }

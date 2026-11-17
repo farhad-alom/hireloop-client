@@ -10,7 +10,7 @@ const BASE_URL =
 // user id and email, so the client cannot apply for someone else.
 // The server also enforces the free 5-application limit: when it answers
 // 402 (limit reached), `limitReached` is true and the page sends the user
-// to /payment.
+// to /checkout.
 export const applyToJob = async (
     jobId: string
 ): Promise<{ ok: boolean; error?: string; limitReached?: boolean }> => {
@@ -43,7 +43,7 @@ export const applyToJob = async (
 
 // How many applications the logged-in user has already used.
 // JobDetails checks this before applying, so a user on the free plan
-// (max 5) is sent to /payment instead of getting an API error.
+// (max 5) is sent to /checkout instead of getting an API error.
 export const getApplicationCount = async (): Promise<{
     ok: boolean;
     count: number;
